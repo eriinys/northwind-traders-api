@@ -51,4 +51,9 @@ public class ProductsController {
     public Product getProductById(@PathVariable int id){
         return productDao.getById(id);
     }
+
+    @RequestMapping(path="/products", method=RequestMethod.POST)
+    public Product addProduct(@RequestBody Product product){
+        return productDao.insert(product);
+    }
 }
