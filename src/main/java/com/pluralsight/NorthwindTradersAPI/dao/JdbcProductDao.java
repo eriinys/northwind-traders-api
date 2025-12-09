@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import javax.sql.DataSource;
+import javax.xml.transform.Result;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -69,5 +70,30 @@ public class JdbcProductDao implements ProductDao{
             e.printStackTrace();
         }
         return null;
+    }
+
+    @Override
+    public Product insert(Product product) {
+        String sql = "INSERT INTO products (ProductName, CategoryID, UnitPrice) " +
+                "VALUES (?, ? ,?)";
+
+        try (Connection conn = dataSource.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql, PreparedStatement.RETURN_GENERATED_KEYS)) {
+            ps.setString(1, product.getProductName());
+            ps.setInt(2, product.getCategoryId());
+            ps.setDouble(3, product.getUnitPrice());
+            ps.executeUpdate();
+
+            try (ResultSet keys = ps.getGeneratedKeys()) {
+                if (keys.next()) {
+                    int productID = keys.getInt(1);
+                    product.setProductId(productID);
+                    System.out.printf("New product (ProductID: %d) was successfully added", productID);
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return product;
     }
 }
