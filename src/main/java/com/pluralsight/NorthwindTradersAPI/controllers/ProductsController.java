@@ -58,11 +58,16 @@ public class ProductsController {
         return productDao.insert(product);
     }
 
-    @RequestMapping(path="/products/{id}")
+    @RequestMapping(path="/products/{id}", method=RequestMethod.PUT)
     public void updateProduct(
             @PathVariable int id,
             @RequestBody Product product
     ){
         productDao.update(id, product);
+    }
+
+    @RequestMapping(path="/products/{id}", method=RequestMethod.DELETE)
+    public void deleteProduct(@PathVariable int id){
+        productDao.delete(id);
     }
 }
