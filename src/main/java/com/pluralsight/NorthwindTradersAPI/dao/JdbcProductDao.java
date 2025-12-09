@@ -96,4 +96,21 @@ public class JdbcProductDao implements ProductDao{
         }
         return product;
     }
+
+    @Override
+    public void update(int id, Product product) {
+        String sql = "UPDATE products SET ProductName = ?, CategoryID =? , UnitPrice = ? " +
+                "WHERE ProductID = ?";
+        try(Connection conn = dataSource.getConnection();
+        PreparedStatement ps = conn.prepareStatement(sql)){
+            ps.setString(1, product.getProductName());
+            ps.setInt(2, product.getCategoryId());
+            ps.setDouble(3, product.getUnitPrice());
+            ps.setInt(4, id);
+            ps.executeUpdate();
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
 }
