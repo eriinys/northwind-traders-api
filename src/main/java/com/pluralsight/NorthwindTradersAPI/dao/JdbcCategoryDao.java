@@ -88,5 +88,21 @@ public class JdbcCategoryDao implements CategoryDao {
         }
         return category;
     }
+
+    @Override
+    public void update(int id, Category category) {
+        String sql = "UPDATE categories SET CategoryName = ? " +
+                "WHERE CategoryID = ?";
+
+        try(Connection conn = dataSource.getConnection();
+        PreparedStatement ps = conn.prepareStatement(sql)){
+            ps.setString(1, category.getCategoryName());
+            ps.setInt(2, id);
+            ps.executeUpdate();
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
 }
 
