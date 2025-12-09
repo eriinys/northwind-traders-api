@@ -41,7 +41,7 @@ public class CategoriesController {
         return categoryList;
     }
 
-    @RequestMapping(path="/categories/{id}")
+    @RequestMapping(path="/categories/{id}", method=RequestMethod.GET)
     public Category getCategoryById(@PathVariable int id){
         return categoryDao.getById(id);
     }
@@ -51,11 +51,16 @@ public class CategoriesController {
         return categoryDao.insert(category);
     }
 
-    @RequestMapping(path="/categories/{id}")
+    @RequestMapping(path="/categories/{id}", method=RequestMethod.PUT)
     public void updateCategory(
             @PathVariable int id,
             @RequestBody Category category
     ){
       categoryDao.update(id, category);
+    }
+
+    @RequestMapping(path="/categories/{id}", method=RequestMethod.DELETE)
+    public void deleteCategory(@PathVariable int id){
+        categoryDao.delete(id);
     }
 }
