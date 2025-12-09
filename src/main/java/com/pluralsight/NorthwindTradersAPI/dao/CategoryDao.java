@@ -12,4 +12,6 @@ public interface CategoryDao {
     Category insert(Category category);
 
     void update(int id, Category category);
+
+    void delete(int id);
 }
