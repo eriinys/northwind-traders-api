@@ -1,17 +1,16 @@
 package com.pluralsight.NorthwindTradersAPI.controllers;
 
+import com.pluralsight.NorthwindTradersAPI.dao.CategoryDao;
 import com.pluralsight.NorthwindTradersAPI.models.Category;
-import com.pluralsight.NorthwindTradersAPI.models.Product;
 import org.springframework.web.bind.annotation.*;
 import java.util.*;
 
 @RestController
 public class CategoriesController {
-    private List<Category> categoryList = new ArrayList<>();
+    private CategoryDao categoryDao;
 
-    public  CategoriesController(){
-        categoryList.add(new Category(1, "Seafood"));
-        categoryList.add(new Category(17, "Vegetable"));
+    public  CategoriesController(CategoryDao categoryDao){
+        this.categoryDao = categoryDao;
     }
 
     @RequestMapping(path="/categories", method= RequestMethod.GET)
@@ -19,9 +18,9 @@ public class CategoriesController {
             @RequestParam(required = false) Integer categoryId,
             @RequestParam(required = false) String name
     ){
-        List<Category> filtered = new ArrayList<>();
+        List<Category> categoryList = new ArrayList<>();
 
-        for(Category c : categoryList){
+        for(Category c : categoryDao.getAll()){
             boolean match = true;
 
             if(categoryId != null){
@@ -35,19 +34,14 @@ public class CategoriesController {
                 }
             }
             if(match){
-                filtered.add(c);
+                categoryList.add(c);
             }
         }
-        return filtered;
+        return categoryList;
     }
 
     @RequestMapping(path="/categories/{id}")
     public Category getCategoryById(@PathVariable int id){
-        for (Category c : categoryList){
-            if(c.getCategoryId() == id){
-                return c;
-            }
-        }
-        return null;
+        return categoryDao.getById(id);
     }
 }
