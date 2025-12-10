@@ -79,14 +79,15 @@ public class JdbcCategoryDao implements CategoryDao {
             try (ResultSet keys = ps.getGeneratedKeys()) {
                 if (keys.next()) {
                     int categoryId = keys.getInt(1);
-                    category.setCategoryId(categoryId);
+                    Category c = getById(categoryId);
                     System.out.printf("New category (CategoryID: %d) was successfully added", categoryId);
+                    return c;
                 }
             }
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        return category;
+        return null;
     }
 
     @Override

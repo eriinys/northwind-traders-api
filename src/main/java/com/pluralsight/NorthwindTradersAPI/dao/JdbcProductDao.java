@@ -39,12 +39,10 @@ public class JdbcProductDao implements ProductDao{
 
                 productList.add(new Product(productId, productName, categoryId,unitPrice));
             }
-            return productList;
-
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        return null;
+        return productList;
     }
 
     @Override
@@ -87,14 +85,15 @@ public class JdbcProductDao implements ProductDao{
             try (ResultSet keys = ps.getGeneratedKeys()) {
                 if (keys.next()) {
                     int productID = keys.getInt(1);
-                    product.setProductId(productID);
+                    Product p = getById(productID);
                     System.out.printf("New product (ProductID: %d) was successfully added", productID);
+                    return p;
                 }
             }
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        return product;
+        return null;
     }
 
     @Override
